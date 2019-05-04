@@ -1,8 +1,14 @@
 <template>
-    <div>
-        <input type="text" placeholder="Enter text" v-model="text"/>
-        <input type="button" value="Save" @click="save"/>
-    </div>
+    <v-layout row>
+        <v-text-field
+                label="New message"
+                placeholder="Enter something"
+                v-model="text"
+        />
+        <v-btn @click="save">
+            Save
+        </v-btn>
+    </v-layout>
 </template>
 
 <script>
@@ -18,8 +24,8 @@
         },
         watch: {
             messageAttr: function(newVal, oldVal) {
-                this.text = newVal.text;
-                this.id = newVal.id;
+                this.text = newVal.text
+                this.id = newVal.id
             }
         },
         methods: {
