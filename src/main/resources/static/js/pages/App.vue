@@ -13,7 +13,7 @@
                 <a href="/login">Google</a>
             </v-container>
             <v-container v-if="profile">
-                <messages-list :messages="messages" />
+                <messages-list />
             </v-container>
         </v-content>
     </v-app>
@@ -22,25 +22,32 @@
 <script>
     import MessagesList from 'components/messages/MessageList.vue'
     import { addHandler } from "util/ws"
-    import { getIndex } from "util/collections"
+    import { mapState, mapMutations } from 'vuex'
 
     export default {
         components: {
             MessagesList
         },
-        data() {
-            return {
-                messages: frontendData.messages,
-                profile: frontendData.profile
-            }
-        },
+        computed: mapState(['profile']),
+        methods: mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),
         created() {
             addHandler(data => {
-                let index = getIndex(this.messages, data.id);
-                if(index > -1) {
-                    this.messages.splice(index, 1, data)
+                if(data.objectType === 'MESSAGE') {
+                    switch (data.eventType) {
+                        case 'CREATE' :
+                            this.addMessageMutation(data.body)
+                            break
+                        case 'UPDATE' :
+                            this.updateMessageMutation(data.body)
+                            break
+                        case 'REMOVE' :
+                            this.removeMessageMutation(data.body)
+                            break
+                        default :
+                            console.error(`Event type of the message is unknown "${data.eventType}"`)
+                    }
                 } else {
-                    this.messages.push(data)
+                    console.error(`Object type of the message is unknown "${objectType}"`)
                 }
             })
         }
