@@ -33,6 +33,7 @@ dependencies {
     implementation('org.springframework.session:spring-session-jdbc')
     implementation(group: 'mysql', name: 'mysql-connector-java', version: '8.0.13')
     implementation('org.projectlombok:lombok')
+    implementation('org.jsoup:jsoup:1.11.3')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     runtime('org.springframework.boot:spring-boot-devtools')

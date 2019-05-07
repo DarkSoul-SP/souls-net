@@ -28,11 +28,13 @@ public class WsSender {
 
         return (EventType eventType, T payload) -> {
             String value = null;
+
             try {
                 value = writer.writeValueAsString(payload);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
+
             template.convertAndSend(
                     "/topic/activity",
                     new WsEventDto(objectType, eventType, value)

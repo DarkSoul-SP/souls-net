@@ -1,4 +1,4 @@
-package ua.darksoul.testprojects.soulsnet.exceptions;
+package ua.darksoul.testprojects.soulsnet.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -18,7 +18,7 @@ public class MainController {
     private final MessageRepo messageRepo;
 
     @Value("${spring.profiles.active}")
-    private String profile;
+    private String mode;
 
     @Autowired
     public MainController(MessageRepo messageRepo) {
@@ -35,7 +35,7 @@ public class MainController {
         }
 
         model.addAttribute("frontendData", data);
-        model.addAttribute("isDevMode", "dev".equals(profile));
+        model.addAttribute("isDevMode", "dev".equals(mode));
 
         return "index";
     }
