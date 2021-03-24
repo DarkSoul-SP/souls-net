@@ -32,37 +32,50 @@
     export default {
         computed: mapState(['profile']),
         methods: {
-            ...mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),
+            ...mapMutations([
+                'addMessageMutation',
+                'updateMessageMutation',
+                'removeMessageMutation',
+                'addCommentMutation'
+            ]),
             showMessages() {
                 this.$router.push('/')
             },
             showProfile() {
                 this.$router.push('/profile')
-            },
+            }
         },
         created() {
             addHandler(data => {
-                if(data.objectType === 'MESSAGE') {
-                    switch (data.eventType) {
-                        case 'CREATE' :
-                            this.addMessageMutation(data.body)
-                            break
-                        case 'UPDATE' :
-                            this.updateMessageMutation(data.body)
-                            break
-                        case 'REMOVE' :
-                            this.removeMessageMutation(data.body)
-                            break
-                        default :
-                            console.error(`Event type of the message is unknown "${data.eventType}"`)
-                    }
-                } else {
-                    console.error(`Object type of the message is unknown "${objectType}"`)
+              if(data.objectType === 'MESSAGE') {
+                switch (data.eventType) {
+                  case 'CREATE' :
+                    this.addMessageMutation(data.body)
+                    break
+                  case 'UPDATE' :
+                    this.updateMessageMutation(data.body)
+                    break
+                  case 'REMOVE' :
+                    this.removeMessageMutation(data.body)
+                    break
+                  default :
+                    console.error(`Event type of the message is unknown "${data.eventType}"`)
                 }
+              } else if(data.objectType === 'COMMENT') {
+                switch (data.eventType) {
+                  case 'CREATE' :
+                    this.addCommentMutation(data.body)
+                    break
+                  default :
+                    console.error(`Event type of the comment is unknown "${data.eventType}"`)
+                }
+              } else {
+                console.error(`Object type of the message is unknown "${objectType}"`)
+              }
             })
         },
         beforeMount() {
-            if( !this.profile ) {
+            if (!this.profile) {
                 this.$router.replace('/auth')
             }
         }

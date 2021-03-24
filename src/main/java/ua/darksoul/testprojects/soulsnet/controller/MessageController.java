@@ -8,8 +8,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ua.darksoul.testprojects.soulsnet.domain.Message;
+import ua.darksoul.testprojects.soulsnet.domain.User;
 import ua.darksoul.testprojects.soulsnet.domain.Views;
 import ua.darksoul.testprojects.soulsnet.dto.EventType;
 import ua.darksoul.testprojects.soulsnet.dto.MetaDto;
@@ -55,9 +57,13 @@ public class MessageController {
     }
 
     @PostMapping
-    public Message create(@RequestBody Message message) throws IOException {
+    public Message create(
+            @RequestBody Message message,
+            @AuthenticationPrincipal User author
+    ) throws IOException {
         message.setCreationDate(LocalDateTime.now());
         fillMeta(message);
+        message.setAuthor(author);
         Message updatedMessage = messageRepo.save(message);
 
         wsSender.accept(EventType.CREATE, updatedMessage);
@@ -70,7 +76,11 @@ public class MessageController {
             @PathVariable("id") Message messageFromDB,
             @RequestBody Message message
     ) throws IOException {
-        BeanUtils.copyProperties(message, messageFromDB, "id");
+//        BeanUtils.copyProperties(message, messageFromDB, "id", "creationDate", "author");
+
+        if(messageFromDB != null) {
+            messageFromDB.setText(message.getText());
+        }
         fillMeta(messageFromDB);
         Message updatedMessage = messageRepo.save(messageFromDB);
 

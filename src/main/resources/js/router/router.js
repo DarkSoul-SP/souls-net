@@ -8,12 +8,13 @@ Vue.use(VueRouter)
 
 const routes = [
     { path: '/', component: MessagesList },
-    { path: '/auth', component: Auth},
-    { path: '/profile', component: Profile},
-    { path: '*', component: MessagesList}
+    { path: '/auth', component: Auth },
+    { path: '/profile', component: Profile },
+    { path: '*', component: MessagesList }
 ]
 
 export default new VueRouter({
     mode: 'history',
+    base: '/',
     routes
 })

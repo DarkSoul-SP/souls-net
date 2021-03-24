@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SoulsnetApplication {
+public class SoulsNetApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SoulsnetApplication.class, args);
+        SpringApplication.run(SoulsNetApplication.class, args);
     }
 }

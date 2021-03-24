@@ -1,6 +1,4 @@
-**SoulsNet**
-
-Demo <b>RESTful</b> java-project with using <b>Websockets</b>.
+***SoulsNet*** — it is a <b>chat and demo RESTful</b> java project with <b>websockets</b>.
 
 **Client-side** — JS (with <b>Vue.js</b>). <b>Thymeleaf</b> as templating engine.
  
@@ -8,6 +6,6 @@ Demo <b>RESTful</b> java-project with using <b>Websockets</b>.
 
 **Server-side** — <b>Spring (Boot, Data, MVC, Security, Test)</b>.
 
-JPA(<b>Hibernate</b>) for working with DB (<b>MySQL</b>).  
+Spring JPA(<b>Hibernate</b>) for work with (<b>Postgres</b>).  
 
-<b>Gradle</b> for dependencies and packaging.
+<b>Gradle</b> for work with dependencies and packaging.

@@ -1,6 +1,6 @@
 <template>
     <v-container class="container-authorization">
-        You need to autorize through
+        You need to authorize through
         <a href="/login">Google</a>
     </v-container>
 </template>

@@ -1,0 +1,35 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/pg_soulsnet
+#    password: 1234
+    password: postgres
+    username: postgres
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  session:
+    jdbc:
+      initialize-schema=: always
+      table-name: SPRING_SESSION
+      schema: classpath:session_tables.sql
+
+security:
+  oauth2:
+    client:
+      clientId: 315099600856-aopm8t959s9uhvu63un8l4fkkqs76u1a.apps.googleusercontent.com
+      clientSecret: ${clientSecret}
+      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+      clientAuthenticationScheme: form
+      scope: openid,email,profile
+    resource:
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+      preferTokenInfo: true
