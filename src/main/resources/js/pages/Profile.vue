@@ -9,11 +9,11 @@
                     </v-flex>
                     <v-flex class="px-3">
                         <v-layout column class="profile-data">
-                            <v-flex>{{profile.name}}</v-flex>
-                            <v-flex>{{profile.email}}</v-flex>
-                            <v-flex>{{profile.gender}}</v-flex>
-                            <v-flex>{{profile.locale}}</v-flex>
-                            <v-flex>{{profile.lastVisit}}</v-flex>
+                            <v-flex>Username: {{profile.name}}</v-flex>
+                            <v-flex>Email: {{profile.email}}</v-flex>
+                            <v-flex v-if="profile.gender">Gender: {{profile.gender}}</v-flex>
+                            <v-flex>Locale: {{profile.locale}}</v-flex>
+                            <v-flex>Last visit: {{profile.lastVisit}}</v-flex>
                         </v-layout>
                     </v-flex>
                 </v-layout>
