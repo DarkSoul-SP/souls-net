@@ -11,19 +11,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.darksoul.testprojects.soulsnet.domain.Message;
 import ua.darksoul.testprojects.soulsnet.domain.User;
+import ua.darksoul.testprojects.soulsnet.domain.UserSubscription;
 import ua.darksoul.testprojects.soulsnet.domain.Views;
 import ua.darksoul.testprojects.soulsnet.dto.EventType;
 import ua.darksoul.testprojects.soulsnet.dto.MessagePageDto;
 import ua.darksoul.testprojects.soulsnet.dto.MetaDto;
 import ua.darksoul.testprojects.soulsnet.dto.ObjectType;
 import ua.darksoul.testprojects.soulsnet.repo.MessageRepo;
+import ua.darksoul.testprojects.soulsnet.repo.UserSubscriptionRepo;
 import ua.darksoul.testprojects.soulsnet.util.WsSender;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by DarkSoul on 28.03.2021
@@ -38,14 +42,18 @@ public class MessageService {
     private static Pattern IMG_REGEX = Pattern.compile(IMAGE_PATTERN, Pattern.CASE_INSENSITIVE);
 
     private final MessageRepo messageRepo;
+    private final UserSubscriptionRepo userSubscriptionRepo;
     private final BiConsumer<EventType, Message> wsSender;
 
     @Autowired
-    public MessageService(MessageRepo messageRepo, WsSender wsSender) {
+    public MessageService(
+            MessageRepo messageRepo,
+            UserSubscriptionRepo userSubscriptionRepo,
+            WsSender wsSender) {
         this.messageRepo = messageRepo;
-        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, Views.IdName.class);
+        this.userSubscriptionRepo = userSubscriptionRepo;
+        this.wsSender = wsSender.getSender(ObjectType.MESSAGE, Views.FullMessage.class);
     }
-
 
     private void fillMeta(Message message) throws IOException {
         @NonNull
@@ -95,8 +103,6 @@ public class MessageService {
     }
 
     public Message update(Message messageFromDB, Message message) throws IOException {
-//        BeanUtils.copyProperties(message, messageFromDB, "id", "creationDate", "author");
-
         if(messageFromDB != null) {
             messageFromDB.setText(message.getText());
         }
@@ -120,8 +126,17 @@ public class MessageService {
         return updatedMessage;
     }
 
-    public MessagePageDto findAll(Pageable pageable) {
-        Page<Message> page = messageRepo.findAll(pageable);
+    public MessagePageDto findForUser(Pageable pageable, User user) {
+        List<User> channels = userSubscriptionRepo.findBySubscriber(user)
+                .stream()
+                .filter(UserSubscription::isActive)
+                .map(UserSubscription::getChannel)
+                .collect(Collectors.toList());
+
+        channels.add(user);
+
+        Page<Message> page = messageRepo.findByAuthorIn(channels, pageable);
+
         return new MessagePageDto(
                 page.getContent(),
                 pageable.getPageNumber(),

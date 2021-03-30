@@ -12,6 +12,10 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@JsonIdentityInfo(
+        property = "id",
+        generator = ObjectIdGenerators.PropertyGenerator.class
+)
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
