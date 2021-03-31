@@ -55,6 +55,7 @@ dependencies {
     implementation('com.sun.xml.bind:jaxb-impl')
     implementation('org.projectlombok:lombok')
     implementation('org.jsoup:jsoup:1.11.3')
+    implementation 'io.sentry:sentry-spring-boot-starter:4.3.0'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     runtime('org.springframework.boot:spring-boot-devtools')

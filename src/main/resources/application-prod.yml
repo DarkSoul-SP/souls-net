@@ -32,3 +32,8 @@ security:
     resource:
       userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
       preferTokenInfo: true
+
+sentry:
+  dsn: ${sentryDSN}
+  environment: production
+  release: soulsnet@1.0.0

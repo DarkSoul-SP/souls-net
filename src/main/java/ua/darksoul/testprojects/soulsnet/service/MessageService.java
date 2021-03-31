@@ -46,10 +46,7 @@ public class MessageService {
     private final BiConsumer<EventType, Message> wsSender;
 
     @Autowired
-    public MessageService(
-            MessageRepo messageRepo,
-            UserSubscriptionRepo userSubscriptionRepo,
-            WsSender wsSender) {
+    public MessageService(MessageRepo messageRepo, UserSubscriptionRepo userSubscriptionRepo, WsSender wsSender) {
         this.messageRepo = messageRepo;
         this.userSubscriptionRepo = userSubscriptionRepo;
         this.wsSender = wsSender.getSender(ObjectType.MESSAGE, Views.FullMessage.class);
@@ -103,11 +100,13 @@ public class MessageService {
     }
 
     public Message update(Message messageFromDB, Message message) throws IOException {
-        if(messageFromDB != null) {
-            messageFromDB.setText(message.getText());
+        if(messageFromDB == null) {
+            return null;
         }
 
+        messageFromDB.setText(message.getText());
         fillMeta(messageFromDB);
+
         Message updatedMessage = messageRepo.save(messageFromDB);
 
         wsSender.accept(EventType.UPDATE, updatedMessage);
