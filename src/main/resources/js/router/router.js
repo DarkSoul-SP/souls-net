@@ -4,6 +4,7 @@ import MessagesList from 'pages/MessageList.vue'
 import Auth from 'pages/Auth.vue'
 import Profile from 'pages/Profile.vue'
 import Subscriptions from 'pages/Subscriptions.vue'
+import Subscribers from 'pages/Subscribers.vue'
 
 Vue.use(VueRouter)
 
@@ -12,6 +13,7 @@ const routes = [
     { path: '/auth', component: Auth },
     { path: '/user/:id?', component: Profile },
     { path: '/subscriptions/:id', component: Subscriptions },
+    { path: '/subscribers/:id', component: Subscribers },
     { path: '*', component: MessagesList }
 ]
 

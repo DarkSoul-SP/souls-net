@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.darksoul.testprojects.soulsnet.domain.User;
 import ua.darksoul.testprojects.soulsnet.domain.UserSubscription;
-import ua.darksoul.testprojects.soulsnet.repo.UserDetailsRepo;
 import ua.darksoul.testprojects.soulsnet.repo.UserSubscriptionRepo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by DarkSoul on 30.03.2021
@@ -21,6 +19,10 @@ public class UserSubscriptionService {
     @Autowired
     public UserSubscriptionService(UserSubscriptionRepo userSubscriptionRepo) {
         this.userSubscriptionRepo = userSubscriptionRepo;
+    }
+
+    public List<UserSubscription> getSubscriptions(User subscriber) {
+        return userSubscriptionRepo.findBySubscriber(subscriber);
     }
 
     public List<UserSubscription> getSubscribers(User channel) {

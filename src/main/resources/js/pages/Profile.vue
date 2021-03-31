@@ -10,20 +10,21 @@
                     <v-flex class="px-3">
                         <v-layout column class="profile-data">
                             <v-flex>Username: {{profile.name}}</v-flex>
-<!--                            <v-flex v-if="isMyProfile">Email: {{profile.email}}</v-flex>-->
                             <v-flex v-if="profile.gender">Gender: {{profile.gender}}</v-flex>
-<!--                            <v-flex>Locale: {{profile.locale}}</v-flex>-->
                             <v-flex>Last visit: {{profile.lastVisit}}</v-flex>
-                            <v-flex>Subscriptions: {{profile.subscriptions && profile.subscriptions.length}}</v-flex>
                             <router-link v-if="isMyProfile" :to="`/subscriptions/${profile.id}`">
-                                Subscribers: {{profile.subscribers && profile.subscribers.length}}
+                                Subscriptions: {{profile.subscriptions && profile.subscriptions.length}}
                             </router-link>
-                            <v-flex v-else>Subscribers: {{profile.subscribers && profile.subscribers.length}}</v-flex>
+                            <v-flex v-else>Subscriptions: {{profile.subscriptions && profile.subscriptions.length}}</v-flex>
+                            <router-link v-if="profile.subscribers && profile.subscribers.length > 0" :to="`/subscribers/${profile.id}`">
+                                Subscribers: {{profile.subscribers.length}}
+                            </router-link>
+                            <v-flex v-else>Subscribers: 0</v-flex>
                         </v-layout>
                     </v-flex>
                 </v-layout>
-                <v-btn v-if="!isMyProfile"
-                       @click="changeSubscription" class="subscribed"
+                <v-btn v-if="!isMyProfile" class="mt-3" style="margin-left: 2.5em;"
+                       @click="changeSubscription"
                        :style="{ backgroundColor: activeColor }">
                   {{ isISubscribed ? 'Unsubscribe' : 'Subscribe'}}
                 </v-btn>

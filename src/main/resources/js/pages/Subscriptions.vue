@@ -3,14 +3,10 @@
         <v-layout justify-space-around>
             <v-list v-if="subscriptions.length > 0">
                 <v-list-tile v-for="item in subscriptions">
-                    <user-link :user="item.subscriber" size="28"></user-link>
-
-                    <v-btn @click="changeSubscriptionStatus(item.subscriber.id)">
-                        {{item.active ? 'Dismiss' : 'Approve'}}
-                    </v-btn>
+                    <user-link :user="item.channel" size="28"></user-link>
                 </v-list-tile>
             </v-list>
-            <div v-else style="font-size: 24px">You have not subscribers yet</div>
+            <div v-else style="font-size: 24px">You have not subscriptions yet</div>
         </v-layout>
     </v-container>
 </template>
@@ -27,28 +23,8 @@
                 subscriptions: []
             }
         },
-        methods: {
-            async changeSubscriptionStatus(subscriberId) {
-                await profileApi.changeSubscriptionStatus(subscriberId)
-
-                const subscriptionIndex = this.subscriptions.findIndex(
-                    item => item.subscriber.id === subscriberId
-                )
-
-                const subscription = this.subscriptions[subscriptionIndex]
-
-                this.subscriptions = [
-                    ...this.subscriptions.slice(0, subscriptionIndex),
-                    {
-                        ...subscription,
-                        active: !subscription.active
-                    },
-                    ...this.subscriptions.slice(subscriptionIndex + 1)
-                ]
-            }
-        },
         async beforeMount() {
-            const res = await profileApi.subscriberList(this.$store.state.profile.id)
+            const res = await profileApi.subscriptionList(this.$store.state.profile.id)
             this.subscriptions = await res.json()
         }
 }

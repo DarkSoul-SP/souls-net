@@ -25,9 +25,7 @@ public class User implements Serializable {
     @JsonView(Views.IdName.class)
     private String userpic;
     private String email;
-    @JsonView(Views.FullProfile.class)
     private String gender;
-    @JsonView(Views.FullProfile.class)
     private String locale;
     @JsonView(Views.FullProfile.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
