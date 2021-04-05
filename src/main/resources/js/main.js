@@ -7,8 +7,23 @@ import App from 'pages/App.vue'
 import store from 'store/store'
 import { connect } from "./util/ws";
 import 'vuetify/dist/vuetify.min.css'
+import * as Sentry from '@sentry/vue'
 
-if (frontendData.profile) {
+Sentry.init({
+    Vue,
+    dsn: "https://fbde7d01bbea4be8ab4c36daf00e0f63@o396287.ingest.sentry.io/5700773",
+    logErrors: true,
+    release: "soulsnet@1.0.0",
+    environment: 'development'
+})
+
+Sentry.setUser({
+    id: profile && profile.id,
+    username: profile && profile.name,
+    email: profile && profile.email
+})
+
+if (profile) {
     connect();
 }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ua.darksoul.testprojects.soulsnet.domain.User;
 import ua.darksoul.testprojects.soulsnet.domain.Views;
 import ua.darksoul.testprojects.soulsnet.dto.MessagePageDto;
+import ua.darksoul.testprojects.soulsnet.repo.UserDetailsRepo;
 import ua.darksoul.testprojects.soulsnet.service.MessageService;
 
 import java.util.HashMap;
@@ -23,17 +24,24 @@ import java.util.HashMap;
 @RequestMapping("/")
 public class MainController {
     private final MessageService messageService;
+    private final UserDetailsRepo userDetailsRepo;
 
     @Value("${spring.profiles.active:prod}")
     private String mode;
-    private final ObjectWriter writer;
+    private final ObjectWriter messageWriter;
+    private final ObjectWriter profileWriter;
 
     @Autowired
-    public MainController(MessageService messageService, ObjectMapper mapper) {
+    public MainController(MessageService messageService, UserDetailsRepo userDetailsRepo, ObjectMapper mapper) {
         this.messageService = messageService;
-        this.writer = mapper
-                .setConfig(mapper.getSerializationConfig())
+        this.userDetailsRepo = userDetailsRepo;
+
+        ObjectMapper objectMapper = mapper
+                .setConfig(mapper.getSerializationConfig());
+        this.messageWriter = objectMapper
                 .writerWithView(Views.FullMessage.class);
+        this.profileWriter = objectMapper
+                .writerWithView(Views.FullProfile.class);
     }
 
     @GetMapping
@@ -42,19 +50,22 @@ public class MainController {
         HashMap<Object, Object> data = new HashMap<>();
 
         if(user != null) {
-            data.put("profile", user);
+            User userFromDB = userDetailsRepo.findById(user.getId()).get();
+            String serializedProfile = profileWriter.writeValueAsString(userFromDB);
+            model.addAttribute("profile", serializedProfile);
 
             Sort sort = Sort.by(Sort.Direction.DESC, "id");
             PageRequest pageRequest = PageRequest.of(0, MessageController.MESSAGES_PER_PAGE, sort);
-            MessagePageDto messagePageDto = messageService.findAll(pageRequest);
+            MessagePageDto messagePageDto = messageService.findForUser(pageRequest, user);
 
-            String messages = writer.writeValueAsString(messagePageDto.getMessages());
+            String serializedMessages = messageWriter.writeValueAsString(messagePageDto.getMessages());
 
-            model.addAttribute("messages", messages);
+            model.addAttribute("messages", serializedMessages);
             data.put("currentPage", messagePageDto.getCurrentPage());
             data.put("totalPages", messagePageDto.getTotalPages());
         } else {
             model.addAttribute("messages", "[]");
+            model.addAttribute("profile", "null");
         }
 
         model.addAttribute("frontendData", data);

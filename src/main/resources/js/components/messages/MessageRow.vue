@@ -1,34 +1,20 @@
 <template>
     <v-card class="my-2">
         <v-card-text primary-title>
-          <div>
-            <v-avatar
-                v-if="message.author && message.author.userpic"
-                size="48px"
-            >
-              <img
-                  :src="message.author.userpic"
-                  :alt="message.author.name"
-              >
-            </v-avatar>
-
-            <v-avatar v-else size="36px" color="indigo">
-              <v-icon dark>
-                mdi-account-circle
-              </v-icon>
-            </v-avatar>
-            <span class="pl-3"> {{ authorName }} </span>
-          </div>
+            <user-link
+                :user="message.author"
+                size="48">
+            </user-link>
           <div class="pt-3">
             {{ message.text }}
           </div>
         </v-card-text>
         <media v-if="message.link" :message="message"></media>
-        <v-card-actions v-if="message.author && profile.id === message.author.id">
-            <v-btn icon @click="edit" small>
+        <v-card-actions>
+            <v-btn v-if="message.author && profile.id === message.author.id" icon @click="edit" small>
               <v-icon>edit</v-icon>
             </v-btn>
-            <v-btn icon @click="del" small>
+            <v-btn v-if="message.author && profile.id === message.author.id || profile.id === '116084113041830167503'" icon @click="del" small>
                 <v-icon>delete</v-icon>
             </v-btn>
         </v-card-actions>
@@ -40,18 +26,16 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+    import {mapActions, mapState} from 'vuex'
     import Media from 'components/media/Media.vue'
-    import CommentList from "../comment/CommentList.vue"
+    import CommentList from '../comment/CommentList.vue'
+    import UserLink from 'components/UserLink.vue';
 
     export default {
         props: ['message' , 'editMessage'],
-        components: { CommentList, Media },
+        components: { UserLink, CommentList, Media },
         computed: {
           ...mapState(['profile']),
-          authorName() {
-            return this.message.author ? this.message.author.name : 'unknown'
-          }
         },
         methods: {
             ...mapActions(['removeMessageAction']),
