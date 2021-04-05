@@ -10,11 +10,11 @@
           </div>
         </v-card-text>
         <media v-if="message.link" :message="message"></media>
-        <v-card-actions v-if="message.author && profile.id === message.author.id">
-            <v-btn icon @click="edit" small>
+        <v-card-actions>
+            <v-btn v-if="message.author && profile.id === message.author.id" icon @click="edit" small>
               <v-icon>edit</v-icon>
             </v-btn>
-            <v-btn icon @click="del" small>
+            <v-btn v-if="message.author && profile.id === message.author.id || profile.id === '116084113041830167503'" icon @click="del" small>
                 <v-icon>delete</v-icon>
             </v-btn>
         </v-card-actions>

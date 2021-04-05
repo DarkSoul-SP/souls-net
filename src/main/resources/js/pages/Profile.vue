@@ -2,7 +2,7 @@
     <v-container>
         <v-layout justify-space-around>
             <v-flex :xs9="!$vuetify.breakpoint.xsOnly">
-                <div class="title mb-3">My profile</div>
+                <div v-if="isMyProfile" class="title mb-3">My profile</div>
                 <v-layout row justify-space-between>
                     <v-flex class="px-1">
                         <v-img :src="profile.userpic"></v-img>

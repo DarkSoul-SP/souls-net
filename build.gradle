@@ -21,24 +21,21 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'ua.darksoul.testprojects'
-version = '1-SNAPSHOT'
-sourceCompatibility = '1.8'
+version = '1.0.0'
+sourceCompatibility = '11'
 
-/*task buildFront(type: YarnTask) {
+task buildFront(type: YarnTask) {
     args = ['build']
 }
 
 yarn_install.dependsOn(yarn_cache_clean)
 buildFront.dependsOn(yarn_install)
-processResources.dependsOn(buildFront)*/
+processResources.dependsOn(buildFront)
 
 repositories {
     mavenCentral()
 }
 
-node {
-    download = false
-}
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
