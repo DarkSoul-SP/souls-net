@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ua.darksoul.testprojects.soulsnet.domain.Message;
 import ua.darksoul.testprojects.soulsnet.domain.User;
 import ua.darksoul.testprojects.soulsnet.domain.UserSubscription;
 import ua.darksoul.testprojects.soulsnet.domain.Views;
 import ua.darksoul.testprojects.soulsnet.service.ProfileService;
 import ua.darksoul.testprojects.soulsnet.service.UserSubscriptionService;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -54,6 +56,12 @@ public class ProfileController {
     @JsonView(Views.IdName.class)
     public List<UserSubscription> subscribers(@PathVariable("channelId") User channel) {
         return userSubscriptionService.getSubscribers(channel);
+    }
+
+    @PutMapping("{id}")
+    @JsonView(Views.FullProfile.class)
+    public User update(@PathVariable("id") User userFromDB) throws IOException {
+        return profileService.update(userFromDB);
     }
 
     @PostMapping("change-status/{subscriberId}")

@@ -31,6 +31,9 @@ public class User implements Serializable {
     @JsonView(Views.FullProfile.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastVisit;
+    @Column(columnDefinition = "boolean default false")
+    @JsonView(Views.FullProfile.class)
+    private boolean autoApprove = false;
 
     @JsonView(Views.FullProfile.class)
     @OneToMany(mappedBy = "subscriber", orphanRemoval = true)

@@ -20,6 +20,13 @@
                                 Subscribers: {{profile.subscribers.length}}
                             </router-link>
                             <v-flex v-else>Subscribers: 0</v-flex>
+                            <v-checkbox
+                                v-if="isMyProfile"
+                                v-model="profile.autoApprove"
+                                label="Enable auto-approval for subscribers"
+                                color="red"
+                                @change="changeAutoApproval"
+                            ></v-checkbox>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -35,6 +42,7 @@
 
 <script>
     import profileApi from 'api/profile'
+    import {mapActions} from "vuex";
 
     export default {
         name: "Profile",
@@ -62,6 +70,7 @@
             }
         },
         methods: {
+            ...mapActions(['updateProfileAction']),
           async changeSubscription() {
               const data = await profileApi.changeSubscription(this.profile.id)
               this.profile = await data.json()
@@ -72,6 +81,9 @@
               this.profile = await data.json()
 
               this.$forceUpdate()
+          },
+          changeAutoApproval() {
+              this.updateProfileAction(this.profile)
           }
         },
         beforeMount() {

@@ -2,6 +2,10 @@
     <v-container>
         <v-layout justify-space-around>
             <v-list v-if="subscribers.length > 0">
+                <v-btn v-if="!isMyProfile" @click="comeBack">
+                    Come back to
+                    <user-link :user="channel" size="28"></user-link>
+                </v-btn>
                 <v-list-tile v-for="item in subscribers">
                     <user-link :user="item.subscriber" size="28"></user-link>
 
@@ -10,7 +14,12 @@
                     </v-btn>
                 </v-list-tile>
             </v-list>
-            <div v-else style="font-size: 24px">Have not subscribers yet</div>
+            <div v-else style="font-size: 24px">
+                Subscribers list is empty
+                <v-btn v-if="!isMyProfile" @click="comeBack(item.subscriber.id)">
+                    Come back to user profile
+                </v-btn>
+            </div>
         </v-layout>
     </v-container>
 </template>
@@ -24,7 +33,8 @@
         components: { UserLink },
         data() {
             return {
-                subscribers: []
+                subscribers: [],
+                channel: {}
             }
         },
         computed: {
@@ -50,11 +60,18 @@
                     },
                     ...this.subscribers.slice(subscriptionIndex + 1)
                 ]
+            },
+            comeBack() {
+                this.$router.push(`/user/${this.channel.id}`)
             }
         },
         async beforeMount() {
             const res = await profileApi.subscriberList(this.$route.params.id)
             this.subscribers = await res.json()
+
+            const id = this.$route.params.id || this.$store.state.profile.id
+            const data = await profileApi.get(id)
+            this.channel = await data.json()
         }
 }
 </script>

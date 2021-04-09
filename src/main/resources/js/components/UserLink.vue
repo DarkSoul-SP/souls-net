@@ -9,7 +9,7 @@
         >
             <img
                 :src="user.userpic"
-                :alt="user.name"
+                alt="picture"
             >
         </v-avatar>
 
@@ -23,13 +23,10 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
-
 export default {
     name: "UserLink",
     props: ['user', 'size'],
     computed: {
-        ...mapState(['profile']),
         userName() {
             return this.user ? this.user.name : 'unknown'
         }

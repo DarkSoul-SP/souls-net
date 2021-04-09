@@ -19,6 +19,7 @@ import ua.darksoul.testprojects.soulsnet.repo.UserDetailsRepo;
 import ua.darksoul.testprojects.soulsnet.service.MessageService;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -30,29 +31,31 @@ public class MainController {
     private String mode;
     private final ObjectWriter messageWriter;
     private final ObjectWriter profileWriter;
+    private final ObjectWriter usersWriter;
 
     @Autowired
     public MainController(MessageService messageService, UserDetailsRepo userDetailsRepo, ObjectMapper mapper) {
         this.messageService = messageService;
         this.userDetailsRepo = userDetailsRepo;
 
-        ObjectMapper objectMapper = mapper
-                .setConfig(mapper.getSerializationConfig());
-        this.messageWriter = objectMapper
-                .writerWithView(Views.FullMessage.class);
-        this.profileWriter = objectMapper
-                .writerWithView(Views.FullProfile.class);
+        ObjectMapper objectMapper = mapper.setConfig(mapper.getSerializationConfig());
+        this.messageWriter = objectMapper.writerWithView(Views.FullMessage.class);
+        this.profileWriter = objectMapper.writerWithView(Views.FullProfile.class);
+        this.usersWriter = objectMapper.writerWithView(Views.IdName.class);
     }
 
     @GetMapping
-    public String main(Model model, @AuthenticationPrincipal User user)
-            throws JsonProcessingException {
+    public String main(Model model, @AuthenticationPrincipal User user) throws JsonProcessingException {
         HashMap<Object, Object> data = new HashMap<>();
 
         if(user != null) {
             User userFromDB = userDetailsRepo.findById(user.getId()).get();
             String serializedProfile = profileWriter.writeValueAsString(userFromDB);
             model.addAttribute("profile", serializedProfile);
+
+            List<User> users = userDetailsRepo.findAll();
+            String serializedUsers = usersWriter.writeValueAsString(users);
+            model.addAttribute("users", serializedUsers);
 
             Sort sort = Sort.by(Sort.Direction.DESC, "id");
             PageRequest pageRequest = PageRequest.of(0, MessageController.MESSAGES_PER_PAGE, sort);
@@ -64,8 +67,9 @@ public class MainController {
             data.put("currentPage", messagePageDto.getCurrentPage());
             data.put("totalPages", messagePageDto.getTotalPages());
         } else {
-            model.addAttribute("messages", "[]");
             model.addAttribute("profile", "null");
+            model.addAttribute("users", "[]");
+            model.addAttribute("messages", "[]");
         }
 
         model.addAttribute("frontendData", data);

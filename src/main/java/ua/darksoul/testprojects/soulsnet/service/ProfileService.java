@@ -2,8 +2,10 @@ package ua.darksoul.testprojects.soulsnet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.darksoul.testprojects.soulsnet.domain.Message;
 import ua.darksoul.testprojects.soulsnet.domain.User;
 import ua.darksoul.testprojects.soulsnet.domain.UserSubscription;
+import ua.darksoul.testprojects.soulsnet.dto.EventType;
 import ua.darksoul.testprojects.soulsnet.repo.UserDetailsRepo;
 import ua.darksoul.testprojects.soulsnet.repo.UserSubscriptionRepo;
 
@@ -31,11 +33,24 @@ public class ProfileService {
 
         if(subscriptions.isEmpty()) {
             UserSubscription subscription = new UserSubscription(channel, subscriber);
+            subscription.setActive(channel.isAutoApprove());
             channel.getSubscribers().add(subscription);
         } else {
             channel.getSubscribers().removeAll(subscriptions);
         }
 
         return userDetailsRepo.save(channel);
+    }
+
+    public User update(User userFromDB) {
+        if(userFromDB == null) {
+            return null;
+        }
+
+        userFromDB.setAutoApprove(!userFromDB.isAutoApprove());
+        User updatedUser = userDetailsRepo.save(userFromDB);
+//        wsSender.accept(EventType.UPDATE, updatedMessage);
+
+        return updatedUser;
     }
 }

@@ -9,6 +9,8 @@
                 Messages
             </v-btn>
             <v-spacer></v-spacer>
+            <SearchPeople v-if="profile"/>
+            <v-spacer></v-spacer>
             <v-btn flat
                    v-if="profile"
                    :disabled="$route.path === '/user'"
@@ -28,8 +30,10 @@
 <script>
     import { addHandler } from "util/ws"
     import { mapState, mapMutations } from 'vuex'
+    import SearchPeople from 'components/SearchPeople.vue'
 
     export default {
+        components: {SearchPeople},
         computed: mapState(['profile']),
         methods: {
             ...mapMutations([

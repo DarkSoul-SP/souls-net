@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import messagesApi from 'api/messages'
 import commentsApi from 'api/comment'
+import profileApi from 'api/profile'
 
 Vue.use(Vuex);
 
@@ -9,11 +10,11 @@ export default new Vuex.Store({
     state: {
         messages,
         profile,
+        users,
         ...frontendData
     },
     getters: {
-        sortedMessages: state => (state.messages || []).sort((a, b) => -(a.id - b.id)),
-        // getProfile: this.profile
+        sortedMessages: state => (state.messages || []).sort((a, b) => -(a.id - b.id))
     },
     mutations: {
         addMessageMutation(state, message) {
@@ -72,6 +73,9 @@ export default new Vuex.Store({
         updateCurrentPageMutation(state, currentPage) {
             state.currentPage = currentPage
         },
+        updateProfileMutation(state, profile) {
+            state.profile = profile
+        }
     },
     actions: {
         async addMessageAction({commit, state}, message) {
@@ -111,6 +115,12 @@ export default new Vuex.Store({
             commit('addMessagePageMutation', data.messages)
             commit('updateTotalPagesMutation', data.totalPages)
             commit('updateCurrentPageMutation', Math.min(data.currentPage, data.totalPages - 1))
-        }
+        },
+        async updateProfileAction({commit}, profile) {
+            const result = await profileApi.update(profile)
+            const data = await result.json()
+
+            commit('updateProfileMutation', data)
+        },
     }
 })
