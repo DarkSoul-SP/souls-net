@@ -1,6 +1,9 @@
+server:
+  port: 5000
+
 spring:
   datasource:
-    url: ${SOULSNET_DATASOURCE_URL:jdbc:postgresql://localhost/pg_soulsnet}
+    url: jdbc:postgresql://${SOULSNET_DATASOURCE_URL:localhost}/pg_soulsnet
     password: ${SOULSNET_DATASOURCE_USERNAME:postgres}
     username: ${SOULSNET_DATASOURCE_PASSWORD:postgres}
   jpa:
